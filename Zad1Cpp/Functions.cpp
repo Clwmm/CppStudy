@@ -347,16 +347,23 @@ void justing(std::vector<std::string>& vecStr, int maxWidth)
         
         if (tempWidth + noWords - 1 <= maxWidth)
             continue;
+        float a = static_cast<float>(maxWidth - tempWidth + vecStr[i].size());
+        float b = static_cast<float>(noWords - 2);
+        float noSpaces = a/b;
 
-        float noSpaces = static_cast<float>(maxWidth - tempWidth + vecStr[i].size()) / static_cast<float>(noWords - 1);
+        //std::cout << "a: " << a << "\tb:" << b << "\tnospaces: " << noSpaces << std::endl;
 
-        std::cout << noSpaces << std::endl;
+        int tempsize = 0;
         for (int j = firstLineIndex; j < i - 1; j++)
         {
-            std::cout << vecStr[j] << " ";
-            //printSpace(noSpaces+1);
+            tempsize += vecStr[j].size();
+            std::cout << vecStr[j];
+            printSpace(noSpaces);
         }
-        std::cout << vecStr[i-1] << std::endl;
+        tempsize += vecStr[i - 1].size();
+        std::cout << vecStr[i - 1] << std::endl;
+
+        //std::cout << "NoSpa: " << noSpaces << "\tWords size: " << tempsize << std::endl;
 
         tempWidth = 0;
         noWords = 0;
