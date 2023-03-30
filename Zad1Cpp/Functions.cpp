@@ -347,23 +347,23 @@ void justing(std::vector<std::string>& vecStr, int maxWidth)
         
         if (tempWidth + noWords - 1 <= maxWidth)
             continue;
-        float a = static_cast<float>(maxWidth - tempWidth + vecStr[i].size());
-        float b = static_cast<float>(noWords - 2);
-        float noSpaces = a/b;
 
-        //std::cout << "a: " << a << "\tb:" << b << "\tnospaces: " << noSpaces << std::endl;
+        float noSpaces = static_cast<float>(maxWidth - tempWidth + vecStr[i].size()) / static_cast<float>(noWords - 2);
+        int modSpaces = (maxWidth - tempWidth + vecStr[i].size()) % (noWords - 2);
 
-        int tempsize = 0;
         for (int j = firstLineIndex; j < i - 1; j++)
         {
-            tempsize += vecStr[j].size();
             std::cout << vecStr[j];
-            printSpace(noSpaces);
+            if (modSpaces > 0)
+            {
+                printSpace(noSpaces + 1);
+                --modSpaces;
+            }
+            else
+                printSpace(noSpaces);
+            
         }
-        tempsize += vecStr[i - 1].size();
         std::cout << vecStr[i - 1] << std::endl;
-
-        //std::cout << "NoSpa: " << noSpaces << "\tWords size: " << tempsize << std::endl;
 
         tempWidth = 0;
         noWords = 0;
@@ -380,6 +380,11 @@ void z2z1()
 
     {
         std::ifstream t("z2z1.txt");
+        if (!t)
+        {
+            std::cout << "File could not be opened!" << std::endl;
+            return;
+        }
         std::stringstream buffer;
         buffer << t.rdbuf();
         t.close();
