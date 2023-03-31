@@ -49,3 +49,11 @@ void z2z4();
 
 void ArtoRz(int c, std::map<int, std::string>& map);
 void z2z5();
+
+// ==================================== ZESTAW II
+
+void z3z1();
+void z3z2();
+void z3z3();
+void z3z4();
+void z3z5();

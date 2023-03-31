@@ -9,6 +9,7 @@ class Program
 	std::map<int, std::map<int, void (*)()>> tasksets;
 	std::map<int, void (*)()> tasks1;
 	std::map<int, void (*)()> tasks2;
+	std::map<int, void (*)()> tasks3;
 
 	int taskSetNumber = 1;
 	int taskNumber = 1;

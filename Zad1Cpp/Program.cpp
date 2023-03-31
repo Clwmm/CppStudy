@@ -171,6 +171,14 @@ Program::Program()
     tasks2[5] = &z2z5;
 
     tasksets[2] = tasks2;
+
+    tasks3[1] = &z3z1;
+    tasks3[2] = &z3z2;
+    tasks3[3] = &z3z3;
+    tasks3[4] = &z3z4;
+    tasks3[5] = &z3z5;
+
+    tasksets[3] = tasks3;
 }
 
 Program::~Program()

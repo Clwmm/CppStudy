@@ -555,3 +555,31 @@ void z2z5()
     ArtoRz(cini, map);
 
 }
+
+
+// ==================================== ZESTAW II
+
+// ZADANIE I
+void z3z1()
+{
+}
+
+// ZADANIE II
+void z3z2()
+{
+}
+
+// ZADANIE III
+void z3z3()
+{
+}
+
+// ZADANIE IV
+void z3z4()
+{
+}
+
+// ZADANIE V
+void z3z5()
+{
+}
