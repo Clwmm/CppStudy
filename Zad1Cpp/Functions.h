@@ -83,9 +83,12 @@ private:
     std::string *str = nullptr;
 
 public:
-    BigInt(const std::string *s = nullptr);
+    BigInt(const char *s = nullptr);
     BigInt(const BigInt& s);
     BigInt(BigInt&& s);
+    BigInt& operator=(const BigInt& s);
+    BigInt& operator=(BigInt&& s);
+    ~BigInt();
 };
 
 void z3z2();

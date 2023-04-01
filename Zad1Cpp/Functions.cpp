@@ -607,27 +607,78 @@ void z3z1()
 
 // ZADANIE II
 
-BigInt::BigInt(const std::string *s)
+BigInt::BigInt(const char *s)
     : str(nullptr)
 {
-    if (*s != nullptr)
-        str = s;
+    if (s != nullptr)
+        str = new std::string(s);
     LOG("BigInt c-tor: [");
     LOG((s ? s : "empty"));
-    LOG("]");
+    LOG("]\n");
 }
 
 BigInt::BigInt(const BigInt& s)
+    : str(nullptr)
 {
+    if (s.str != nullptr)
+    {
+        str = new std::string{" ", s.str->size()};
+        *str = *s.str;
+    }
+    LOG("BigInt cc-tor: [");
+    LOG((str ? *str : std::string("empty")));
+    LOG("]\n");
 }
 
 BigInt::BigInt(BigInt&& s)
+    : str(s.str)
 {
+    s.str = nullptr;
+    LOG("BigInt move c-tor: [");
+    LOG((str ? *str : std::string("empty")));
+    LOG("]\n");
+}
+
+BigInt& BigInt::operator=(const BigInt& s)
+{
+    if (this != &s)
+    {
+        delete str;
+        str = nullptr;
+        str = new std::string{ " ", s.str->size() };
+        *str = *s.str;
+    }
+    LOG("BigInt copy operetator=: [");
+    LOG(str ? *str : std::string("empty"));
+    LOG("]\n");
+    return *this;
+}
+
+BigInt& BigInt::operator=(BigInt&& s)
+{
+    if (this != &s)
+    {
+        delete str;
+        str = s.str;
+        s.str = nullptr;
+    }
+    LOG("BigInt move operator=: [");
+    LOG(str ? *str : std::string("empty"));
+    LOG("]\n");
+    return *this;
+}
+
+BigInt::~BigInt()
+{
+    LOG("BigInt d-tor: [");
+    LOG((str ? *str : std::string("empty")));
+    LOG("]\n");
+    delete str;
 }
 
 void z3z2()
 {
-    BigInt a;
+    
 }
 
 // ZADANIE III
