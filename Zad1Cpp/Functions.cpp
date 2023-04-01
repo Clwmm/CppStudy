@@ -560,13 +560,74 @@ void z2z5()
 // ==================================== ZESTAW II
 
 // ZADANIE I
+
+TString::TString(const char* s)
+    : ptr(nullptr) , len(0)
+{
+    if (s != nullptr)
+    {
+        len = std::strlen(s);
+        ptr = new char[len + 1];
+        //strcpy(ptr, s);
+    }
+    LOG("TString c-tor: [");
+    LOG((ptr ? ptr : "pusty"));
+    LOG("]\n");
+}
+
+TString::TString(const TString& s)
+{
+
+}
+
+TString::TString(TString&& s)
+{
+
+}
+
+TString& TString::operator=(const TString& s)
+{
+    return *this;
+}
+
+TString& TString::operator=(TString&& s)
+{
+    return *this;
+}
+
+TString::~TString()
+{
+    delete[] ptr;
+}
+
 void z3z1()
 {
+    TString a;
 }
 
 // ZADANIE II
+
+BigInt::BigInt(const std::string *s)
+    : str(nullptr)
+{
+    if (*s != nullptr)
+        str = s;
+    LOG("BigInt c-tor: [");
+    LOG((s ? s : "empty"));
+    LOG("]");
+}
+
+BigInt::BigInt(const BigInt& s)
+{
+}
+
+BigInt::BigInt(BigInt&& s)
+{
+}
+
 void z3z2()
 {
+    BigInt a;
 }
 
 // ZADANIE III
