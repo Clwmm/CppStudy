@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\hash-library">
+      <UniqueIdentifier>{f8715f43-88dd-481e-8ebe-acc6a323e793}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -27,6 +30,9 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hash-library\sha256.cpp">
+      <Filter>Resource Files\hash-library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Task.h">
@@ -38,5 +44,22 @@
     <ClInclude Include="Program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="hash-library\sha256.h">
+      <Filter>Resource Files\hash-library</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="z2z1.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="z3z3a.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="z3z3b.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="z3z3c.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

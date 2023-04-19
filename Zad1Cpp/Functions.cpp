@@ -557,7 +557,7 @@ void z2z5()
 }
 
 
-// ==================================== ZESTAW II
+// ==================================== ZESTAW III
 
 // ZADANIE I
 
@@ -568,7 +568,7 @@ TString::TString(const char* s)
     {
         len = std::strlen(s);
         ptr = new char[len + 1];
-        //strcpy(ptr, s);
+        strcpy(ptr, s);
     }
     LOG("TString c-tor: [");
     LOG((ptr ? ptr : "pusty"));
@@ -576,66 +576,182 @@ TString::TString(const char* s)
 }
 
 TString::TString(const TString& s)
+    : ptr(nullptr), len(s.len)
 {
-
+    if (len > 0)
+    {
+        ptr = new char[len + 1];
+        strcpy(ptr, s.ptr);
+    }
+    LOG("TString cc-tor: [");
+    LOG((ptr ? ptr : "pusty"));
+    LOG("]\n");
 }
 
 TString::TString(TString&& s)
+    : ptr(s.ptr), len(s.len)
 {
+    s.ptr = nullptr;
+    s.len = 0;
 
+    LOG("TString move c-tor: [");
+    LOG((ptr ? ptr : "pusty"));
+    LOG("]\n");
 }
 
 TString& TString::operator=(const TString& s)
 {
+    if (this != &s)
+    {
+        delete[] ptr;
+        ptr = nullptr;
+        len = s.len;
+        if (len > 0)
+        {
+            ptr = new char[len + 1];
+            strcpy(ptr, s.ptr);
+        }
+    }
+    LOG("TString copy operator+: [");
+    LOG((ptr ? ptr : "pusty"));
+    LOG("]\n");
     return *this;
 }
 
 TString& TString::operator=(TString&& s)
 {
+    if (this != &s)
+    {
+        delete[] ptr;
+        len = s.len;
+        ptr = s.ptr;
+        s.len = 0;
+        s.ptr = nullptr;
+    }
+    LOG("TString move operator=: [");
+    LOG((ptr ? ptr : "pusty"));
+    LOG("]\n");
     return *this;
 }
 
 TString::~TString()
 {
+    LOG("TString d-tor: [");
+    LOG((ptr ? ptr : "pusty"));
+    LOG("]\n");
     delete[] ptr;
 }
 
 void z3z1()
 {
-    TString a;
+    TString s1;
+    TString s2{ "nikedunklow" };
+    TString s3{ s2 };
+    TString* p = new TString[3]{ "toyotasupra", s3, TString("Poland") };
+    s1 = std::move(s2);
+    delete[] p;
+    std::cout << "===========" << std::endl;
 }
 
 // ZADANIE II
+
+void BigInt::add(const BigInt& a)
+{
+    std::cout << *this << " + " << a << std::endl;
+    std::vector<int> vecstr;
+    for (auto x : *str)
+        vecstr.push_back(int(x - '0'));
+
+    std::vector<int> veca;
+    for (auto x : *a.str)
+        veca.push_back(int(x - '0'));
+
+    if (vecstr.size() < veca.size())
+    {
+        auto temp = vecstr;
+        vecstr = veca;
+        veca = temp;
+    }
+
+    int j = vecstr.size() - 1;
+    for (int i = veca.size() - 1; i >= 0; --i)
+    {
+        vecstr[j] += veca[i];
+        --j;
+    }
+
+    for (int i = vecstr.size() - 1; i > 0; --i)
+    {
+        if (vecstr[i] > 9)
+        {
+            int t = vecstr[i];
+            vecstr[i] = vecstr[i] % 10;
+            t = (t - vecstr[i]) / 10;
+            vecstr[i - 1] += t;
+        }
+    }
+    while (vecstr[0] > 9)
+    {
+        int t = vecstr[0];
+        vecstr[0] = vecstr[0] % 10;
+        t = (t - vecstr[0]) / 10;
+        vecstr.insert(vecstr.begin(), t);
+    }
+
+    std::stringstream res;
+    std::copy(vecstr.begin(), vecstr.end(), std::ostream_iterator<int>(res));
+
+    delete str;
+    str = new std::string(res.str());
+    std::cout << "\t= " << *this << std::endl;
+}
+
+void BigInt::subtract(const BigInt& a)
+{
+    std::cout << *this << " - " << a << std::endl;
+    std::string result;
+    int borrow = 0;
+
+    std::string num1 = *str;
+    std::string num2 = *a.str;
+
+    // Pad the shorter string with leading zeros to make them of equal length
+    int maxLength = std::max(num1.length(), num2.length());
+    num1 = std::string(maxLength - num1.length(), '0') + num1;
+    num2 = std::string(maxLength - num2.length(), '0') + num2;
+
+    // Subtract digits starting from the least significant digit
+    for (int i = maxLength - 1; i >= 0; i--) {
+        int diff = (num1[i] - '0') - (num2[i] - '0') - borrow;
+
+        if (diff < 0) {
+            diff += 10;
+            borrow = 1;
+        }
+        else {
+            borrow = 0;
+        }
+
+        result.insert(0, std::to_string(diff));
+    }
+
+    // Remove any leading zeros in the result
+    result.erase(0, std::min(result.find_first_not_of('0'), result.size() - 1));
+
+    delete str;
+    str = new std::string(result);
+    std::cout << "\t= " << *this << std::endl;
+}
 
 BigInt::BigInt(const char *s)
     : str(nullptr)
 {
     if (s != nullptr)
         str = new std::string(s);
+    else
+        str = new std::string("0");
     LOG("BigInt c-tor: [");
     LOG((s ? s : "empty"));
-    LOG("]\n");
-}
-
-BigInt::BigInt(const BigInt& s)
-    : str(nullptr)
-{
-    if (s.str != nullptr)
-    {
-        str = new std::string{" ", s.str->size()};
-        *str = *s.str;
-    }
-    LOG("BigInt cc-tor: [");
-    LOG((str ? *str : std::string("empty")));
-    LOG("]\n");
-}
-
-BigInt::BigInt(BigInt&& s)
-    : str(s.str)
-{
-    s.str = nullptr;
-    LOG("BigInt move c-tor: [");
-    LOG((str ? *str : std::string("empty")));
     LOG("]\n");
 }
 
@@ -668,6 +784,12 @@ BigInt& BigInt::operator=(BigInt&& s)
     return *this;
 }
 
+std::ostream& operator<<(std::ostream& os, const BigInt& b)
+{
+    os << *b.str;
+    return os;
+}
+
 BigInt::~BigInt()
 {
     LOG("BigInt d-tor: [");
@@ -678,20 +800,226 @@ BigInt::~BigInt()
 
 void z3z2()
 {
+    BigInt a = "3124936129358215241";
+    BigInt b{"541956320156320982316503196"};
+    BigInt c("231596592651937");
+
+    a.add(b);
+    b.subtract(c);
     
 }
 
 // ZADANIE III
+
+bool getMatrixFromFile(const std::string& filename, std::vector<std::vector<int>>& a)
+{
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cout << "Cannot open " << filename << std::endl;
+        return false;
+    }
+
+    a.clear();
+    std::string line;
+    while (std::getline(file, line) and not line.empty()) {
+        std::vector<int> row;
+        std::stringstream ss(line);
+        int val;
+        while (ss >> val) {
+            row.push_back(val);
+        }
+        a.push_back(row);
+    }
+
+    int size = 0;
+    for (int i = 0; i < a.size(); i++)
+    {
+        switch (i)
+        {
+        case 0:
+            size = a[i].size();
+            break;
+        default:
+            if (size != a[i].size())
+            {
+                a.clear();
+                std::cout << "Incorrectly specified matrix: " << filename << std::endl;
+                return false;
+            }
+            break;
+        }
+    }
+
+    file.close();
+    return true;
+}
+
+void multiMatrix(const std::vector<std::vector<int>>& a, const std::vector<std::vector<int>>& b, std::vector<std::vector<int>>& matrix)
+{
+    for (int i = 0; i < a.size(); ++i)
+    {
+        matrix.push_back({ 0 });
+        for (int j = 0; j < b[0].size() - 1; ++j)
+            matrix[i].push_back(0);
+    }
+
+    for (int i = 0; i < a.size(); i++)
+        for (int j = 0; j < b[0].size(); j++)
+        {
+            int s = 0;
+            for (int k = 0; k < b.size(); k++)
+                s += (a[i][k] * b[k][j]);
+            matrix[i][j] = s;
+        }
+}
+
+std::ostream& operator<<(std::ostream& out, const std::vector<std::vector<int>>& matrix)
+{
+    for (auto& x : matrix)
+    {
+        for (auto i : x)
+            out << i << " ";
+        out << "\n";
+    }
+    return out;
+}
+
 void z3z3()
 {
+    bool w1 = false, w2 = false;
+    std::vector<std::vector<int>> mA;
+    std::vector<std::vector<int>> mB;
+    std::vector<std::vector<int>> mC;
+
+    w1 = getMatrixFromFile("z3z3a.txt", mA);
+    w2 = getMatrixFromFile("z3z3b.txt", mB);
+
+    if (!w1 || !w2)
+        return;
+
+    if (mA[0].size() != mB.size())
+    {
+        std::cout << "Incorrectly specified matrices:\nthe number of elements in a row \nof matrix A must be equal to the number\nof rows of matrix B\n\n";
+        return;
+    }
+
+    multiMatrix(mA, mB, mC);
+
+
+    std::cout << "A:\n" << mA << std::endl;
+    std::cout << "B:\n" << mB << std::endl;
+    std::cout << "AXB:\n" << mC << std::endl;
+
+    std::ofstream outFile("z3z3c.txt");
+    if (!outFile.is_open())
+    {
+        std::cout << "Cannot open z3z3c.txt" << std::endl;
+        return;
+    }
+    outFile << mC;
 }
 
 // ZADANIE IV
+
+int gcd(int a, int b)
+{
+    int t;
+    while (true) 
+    {
+        t = a % b;
+        if (t == 0)
+            return b;
+        a = b;
+        b = t;
+    }
+}
+
 void z3z4()
 {
+    double prime_1 = 13;
+    double prime_2 = 17;
+    double n = prime_1 * prime_2;
+    double track;
+    double phi = (prime_1 - 1) * (prime_2 - 1);
+
+    double public_key = 7;
+    
+    while (public_key < phi) {
+        track = gcd(public_key, phi);
+        if (track == 1)
+            break;
+        else
+            public_key++;
+    }
+
+    double private_key_ = 1 / public_key;
+    double private_key = fmod(private_key_, phi);
+
+    double data = 123;
+
+    //encrypt & decrypt
+    double encrypted = pow(data, public_key);
+    double decrypted = pow(encrypted, private_key);
+    encrypted = fmod(encrypted, n);
+    decrypted = fmod(decrypted, n);
+
+    std::cout << "Original integer: " << data << std::endl << std::endl;
+    std::cout << "Encrypted integer: " << encrypted << std::endl;
+    std::cout << "Decrypted integer: " << decrypted << std::endl;
 }
 
 // ZADANIE V
+
+#define MAX_NONCE 100000000000
+
+std::string mine(int block_number, std::string transactions, std::string previous_hash, int prefix_zeros)
+{
+    std::cout << "Start mining:\tDificulty: " << prefix_zeros << std::endl;
+    SHA256 sha256;
+    std::string prefix_str(prefix_zeros, '0');
+    std::string new_hash("");
+
+    for (int nonce = 0; nonce < MAX_NONCE; nonce++)
+    {
+        std::string text = std::to_string(block_number) + transactions + previous_hash + std::to_string(nonce);
+        new_hash = sha256(text);
+        if (new_hash.substr(0, prefix_zeros) == prefix_str)
+        {
+            std::cout << "Successfully mined bitcoins with nonce value: " << nonce << std::endl;
+            return new_hash;
+        }
+    }
+
+    std::cout << "Could not find correct hash after trying " << MAX_NONCE << " times" << std::endl;
+
+    return "";
+}
+
 void z3z5()
 {
+    std::string transa[5] = 
+    {
+        "'''Dhaval->Bhavin->20\nMando->Cara->45'''",
+        "'''Sarvesh->Prem->11\nIsha->Madhuri->21'''",
+        "'''Abhishek->Rati->43\nNiraj->Dipa->87'''",
+        "'''Manan->Mitra->36\nDarsh->Vijaya->18'''",
+        "'''Amit->Pallav->39\nAadesh->Latika->13'''",
+    };
+    int dificulty = 2;
+
+    std::string hash_succ = "0000000xa036944e29568d0cff17edbe038f81208fecf9a66be9a2b8321c6ec7";
+    std::string hash;
+    for (int i = 0; i < 5; i++)
+    {
+        auto time_s = std::chrono::high_resolution_clock::now();
+        hash = mine(5, transa[i], hash_succ, dificulty+i);
+        auto time_e = std::chrono::high_resolution_clock::now();
+
+        std::cout << (hash.size() > 0 ? hash + "\n" : "");
+        if (hash.size() > 0)
+            hash_succ = hash;
+
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(time_e - time_s);
+        std::cout << "Time: " << duration.count() << "ms" << std::endl << std::endl;
+    }
 }

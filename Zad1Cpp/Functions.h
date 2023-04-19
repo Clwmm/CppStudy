@@ -9,6 +9,8 @@
 #include <fstream>
 #include <streambuf>
 #include <sstream>
+#include "hash-library/sha256.h"
+#include <chrono>
 
 #define CHARMAX 100
 
@@ -79,19 +81,34 @@ void z3z1();
 
 class BigInt
 {
-private:
+public:
     std::string *str = nullptr;
 
 public:
+    void add(const BigInt& a);
+    void subtract(const BigInt& a);
     BigInt(const char *s = nullptr);
-    BigInt(const BigInt& s);
-    BigInt(BigInt&& s);
     BigInt& operator=(const BigInt& s);
     BigInt& operator=(BigInt&& s);
+    friend std::ostream& operator<<(std::ostream& out, const BigInt& b);
     ~BigInt();
 };
 
 void z3z2();
+
+// ZADANIE III
+bool getMatrixFromFile(const std::string& filename, std::vector<std::vector<int>>& a);
+void multiMatrix(const std::vector<std::vector<int>>& a, const std::vector<std::vector<int>>& b, std::vector<std::vector<int>>& matrix);
+std::ostream& operator<<(std::ostream& out, const std::vector<std::vector<int>>& matrix);
 void z3z3();
+
+// ZADANIE IV
+
+int gcd(int a, int b);
 void z3z4();
+
+// ZADANIE V
+
+std::string mine(int block_number, std::string transactions, std::string previous_hash, int prefix_zeros);
+
 void z3z5();
