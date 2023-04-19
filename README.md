@@ -1,4 +1,4 @@
-# Zad1Cpp
+# C++ at Jagiellonian University 2023
 Assignments from 2st semester of applied computer science.
 
 - [Task set I](https://github.com/Clwmm/CppStudy/blob/master/Task1_2023.pdf)
